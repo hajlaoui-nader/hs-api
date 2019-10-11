@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 0b72005694ef33b8dc76bf895d91d0ff96cfb5616c9cb6066ac038966f108fcd
+-- hash: f553882a7403708bb42b0b374e79fbf8359a17d4ae23542816086c3c971c7531
 
 name:           hs-api
 version:        0.1.0.0
@@ -27,6 +27,7 @@ source-repository head
 
 library
   exposed-modules:
+      ApiType
       Lib
   other-modules:
       Paths_hs_api
@@ -37,6 +38,8 @@ library
     , base >=4.7 && <5
     , servant
     , servant-server
+    , text
+    , time
     , transformers
     , wai
     , warp
@@ -55,6 +58,8 @@ executable hs-api-exe
     , hs-api
     , servant
     , servant-server
+    , text
+    , time
     , transformers
     , wai
     , warp
@@ -72,11 +77,14 @@ test-suite hs-api-test
       aeson
     , base >=4.7 && <5
     , hs-api
+    , hspec
     , http-client
     , http-types
     , servant
     , servant-client
     , servant-server
+    , text
+    , time
     , transformers
     , wai
     , warp >=3.2.4

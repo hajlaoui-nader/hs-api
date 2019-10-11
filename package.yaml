@@ -27,6 +27,8 @@ dependencies:
 - aeson
 - wai
 - warp
+- text
+- time
 
 library:
   source-dirs: src
@@ -51,6 +53,7 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
+    - hspec
     - hs-api
     - servant-client
     - warp >= 3.2.4
