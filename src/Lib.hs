@@ -43,3 +43,10 @@ composeParsers pa pb = Parser
             Nothing      -> Nothing
             Just (s2, b) -> Just (s2, (a, b))
     )
+
+instance Functor Parser where
+    fmap f pa = Parser
+        (\s0 -> case runParser pa s0 of
+            Nothing      -> Nothing
+            Just (s1, v) -> Just (s1, f v)
+        )
