@@ -15,6 +15,11 @@ def = "hey"
 
 
 data Parser x = Parser(String -> Maybe (String, x))
+data Unit = Unit deriving Show
+
+unit :: Parser Unit
+unit = Parser (\s -> Just (s, Unit))
+
 
 parseBool :: Parser Bool
 parseBool = Parser
