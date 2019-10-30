@@ -79,5 +79,38 @@ expect1 :: Char -> Parser Unit
 expect1 c = parse1
     (\s0 -> case c == s0 of
         True  -> Right Unit
-        False -> Left ("Expected " <> show c <> " got" <> show s0)
+        False -> Left ("Expected " <> show c <> " got " <> show s0)
     )
+
+expect :: String -> Parser Unit
+expect = foldr (\x z -> fmap (const Unit) (pair (expect1 x) z)) unit
+
+seq_ :: Monoidal f => [f x] -> f [x]
+seq_ f = case f of
+    []        -> Lib.pure []
+    fx : rest -> fmap (\(x, xs) -> x : xs) (pair fx (seq_ rest))
+
+pure :: Monoidal f => a -> f a
+pure x = fmap (const x) unit
+
+data Void
+
+class Functor f => Monoidalt f where
+    alt :: f a -> f b -> f (Either a b)
+    voidd :: f Void
+
+instance Monoidalt Parser where
+    alt pa pb = Parser
+        (\s0 -> case runParser pa s0 of
+            Right (n, s1, a) -> Right (n, s1, Left a)
+            Left  _          -> case runParser pb s0 of
+                Left  x           -> Left x
+                Right (n2, s2, b) -> Right (n2, s2, Right b)
+        )
+    voidd = Parser (const (Left (0, "void")))
+
+instance Monoidal [] where
+    unit = [Unit]
+    pair []       _        = []
+    pair _        []       = []
+    pair (x : xs) (y : ys) = (x, y) : (pair xs ys)
